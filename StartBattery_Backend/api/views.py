@@ -127,68 +127,6 @@ class Shop_Users(APIView):
     
 
 
-
-# API TO Authenticate USERS (LOGIN)
-# class Auth(APIView):
-
-#     def post(self, request):
-
-#         UserData = request.data
-#         try:
-#             queryset = User.objects.filter(username=UserData['username']).first()
-
-#             if queryset is None:
-#                 raise AuthenticationFailed('User Not Found')
-
-#             if not queryset.check_password(UserData['password']):
-#                 raise AuthenticationFailed('Incorrect Password')
-            
-#             expire_at = (datetime.datetime.utcnow() + datetime.timedelta(hours=4)).isoformat()
-#             initialize_at = datetime.datetime.utcnow().isoformat()
-#             payload = {
-#                 'id': queryset.id,
-#                 'expire': expire_at,
-#                 'int': initialize_at
-#             }
-
-#             token = jwt.encode(payload, 'secret', algorithm='HS256')
-
-#             response = Response()
-#             response.set_cookie(key='jwt', value=token, httponly=True)
-            
-#             response.data = {
-#                 'jwt': token
-#             }
-#             return response
-
-#         except User.DoesNotExist:
-#             return Response({'error': 'User Not Found'})
-
-# class GetLoginInfo(APIView):
-
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        print(token)
-        if not token:
-            return Response({'error': 'JWT token not found in cookie.'}, status=400)
-
-        try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('JWT token has expired')
-
-        user_id = payload.get('id')
-        user = User.objects.filter(id=user_id).first()
-
-        if not user:
-            return Response({'error': 'User not found'}, status=404)
-
-        serialized_data = UserSerializer(user, many=False).data
-        
-        return Response(serialized_data, status=200)
-
-
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):

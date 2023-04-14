@@ -137,7 +137,7 @@ const New = ({ inputs, title }) => {
                 }
 
                 {
-                  isSuccess &&  <span style={{ color: 'Green' }}><b>{data.data} </b></span>
+                  isSuccess &&  <span style={{ color: 'Green' }}><b>User Created Succesfully</b></span>
                 }
 
 
